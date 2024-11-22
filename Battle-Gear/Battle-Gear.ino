@@ -1,24 +1,26 @@
 #include <NewPing.h>
 
+
+
 // Ultrasonic Sensor Pins
-#define TRIG1 2
-#define ECHO1 3
-#define TRIG2 4
-#define ECHO2 5
-#define TRIG3 6
-#define ECHO3 7
+#define TRIG1 12
+#define ECHO1 13
+#define TRIG2 14
+#define ECHO2 15
+#define TRIG3 16
+#define ECHO3 17
 
 // IR Sensor Pins
-#define IR1 8
-#define IR2 9
+#define IR1 18
+#define IR2 19
 
 // Motor Control Pins (H-Bridge)
-#define ENA 10 // Speed control for Motor A
-#define IN1 11 // Direction control for Motor A
-#define IN2 12 // Direction control for Motor A
-#define ENB 13 // Speed control for Motor B
-#define IN3 A0 // Direction control for Motor B
-#define IN4 A1 // Direction control for Motor B
+#define ENA 5 // Speed control for Motor A (PWM)
+#define IN1 6 // Direction control for Motor A
+#define IN2 7 // Direction control for Motor A
+#define ENB 11 // Speed control for Motor B (PWM)
+#define IN3 10 // Direction control for Motor B
+#define IN4 9 // Direction control for Motor B
 
 // Ultrasonic Sensors Setup
 NewPing sonar1(TRIG1, ECHO1, 200); // Sensor 1, max distance 200 cm
@@ -42,6 +44,8 @@ void setup() {
 }
 
 void loop() {
+
+  //read and debug sensors funcion and processing data
   // Read ultrasonic sensors
   unsigned int distance1 = sonar1.ping_cm();
   unsigned int distance2 = sonar2.ping_cm();
@@ -64,31 +68,89 @@ void loop() {
   Serial.print(ir1Detected);
   Serial.print(", IR2=");
   Serial.println(ir2Detected);
+  ///////////////////////////////////////////////////////////
 
+  /*
+  ///motor test
+   
+   Serial.println("Testing Motor A Forward");
+   moveMotorA(255); // Full speed forward
+   Serial.println("Testing Motor B Forward");
+   moveMotorB(255);
+   delay(2000);     // Run for 2 seconds
+   
+   Serial.println("Testing Motor A Backward");
+   moveMotorA(-255); // Full speed backward
+   Serial.println("Testing Motor B Backward");
+   moveMotorB(-255); // Full speed backward
+   delay(2000);      // Run for 2 seconds
+   
+   Serial.println("Stopping Motor A");
+   stopMotorA();
+   Serial.println("Stopping Motor B");
+   stopMotorB();
+   delay(2000); // Pause for 2 seconds
+   */
+  //decision taking
+  if(ir1Detected)
+  {
+    //back
+  }
+  else if (ir2Detected){
+    //drible back and push
+  }
+  /*
+  //ultra sonic based decision making
+else if()
+   
+   */
 
 }
+
+
+
 
 // Motor Control Functions
+// Function to move Motor A
 void moveMotorA(int speed) {
+  if (speed > 0) {
+    digitalWrite(IN1, HIGH);
+    digitalWrite(IN2, LOW);
+  } 
+  else {
+    digitalWrite(IN1, LOW);
+    digitalWrite(IN2, HIGH);
+    speed = -speed; // Make speed positive for PWM
+  }
   analogWrite(ENA, speed);
-  digitalWrite(IN1, HIGH);
-  digitalWrite(IN2, LOW);
 }
 
+// Function to stop Motor A
 void stopMotorA() {
-  analogWrite(ENA, 0);
   digitalWrite(IN1, LOW);
   digitalWrite(IN2, LOW);
+  analogWrite(ENA, 0);
 }
 
+// Function to move Motor B
 void moveMotorB(int speed) {
+  if (speed > 0) {
+    digitalWrite(IN3, HIGH);
+    digitalWrite(IN4, LOW);
+  } 
+  else {
+    digitalWrite(IN3, LOW);
+    digitalWrite(IN4, HIGH);
+    speed = -speed; // Make speed positive for PWM
+  }
   analogWrite(ENB, speed);
-  digitalWrite(IN3, HIGH);
-  digitalWrite(IN4, LOW);
 }
 
+// Function to stop Motor B
 void stopMotorB() {
-  analogWrite(ENB, 0);
   digitalWrite(IN3, LOW);
   digitalWrite(IN4, LOW);
+  analogWrite(ENB, 0);
 }
+
+
