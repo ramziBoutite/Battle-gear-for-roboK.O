@@ -71,39 +71,65 @@ void loop() {
   ///////////////////////////////////////////////////////////
 
   /*
-  ///motor test
-   
-   Serial.println("Testing Motor A Forward");
-   moveMotorA(255); // Full speed forward
-   Serial.println("Testing Motor B Forward");
-   moveMotorB(255);
-   delay(2000);     // Run for 2 seconds
-   
-   Serial.println("Testing Motor A Backward");
-   moveMotorA(-255); // Full speed backward
-   Serial.println("Testing Motor B Backward");
-   moveMotorB(-255); // Full speed backward
-   delay(2000);      // Run for 2 seconds
-   
-   Serial.println("Stopping Motor A");
-   stopMotorA();
-   Serial.println("Stopping Motor B");
-   stopMotorB();
-   delay(2000); // Pause for 2 seconds
-   */
+    ///motor test
+
+    Serial.println("Testing Motor A Forward");
+    moveMotorA(255); // Full speed forward
+    Serial.println("Testing Motor B Forward");
+    moveMotorB(255);
+    delay(2000);     // Run for 2 seconds
+
+    Serial.println("Testing Motor A Backward");
+    moveMotorA(-255); // Full speed backward
+    Serial.println("Testing Motor B Backward");
+    moveMotorB(-255); // Full speed backward
+    delay(2000);      // Run for 2 seconds
+
+    Serial.println("Stopping Motor A");
+    stopMotorA();
+    Serial.println("Stopping Motor B");
+    stopMotorB();
+    delay(2000); // Pause for 2 seconds
+  */
   //decision taking
-  if(ir1Detected)
+  if (ir1Detected)
   {
     //back
+    moveMotorA(-255); // Full speed backward
+    moveMotorB(-255); // Full speed backward
+    delay(2000);
   }
-  else if (ir2Detected){
+  else if (ir2Detected) {
     //drible back and push
+    moveMotorA(-255);
+    delay(2000);
   }
-  /*
+
   //ultra sonic based decision making
-else if()
-   
-   */
+  else if ((distance1 > 100) && (distance2 > 100) && (distance3 > 100)) {
+    //search
+    moveMotorA(255);
+    moveMotorB(155);
+  }
+
+  else {
+    if (distance1 < 100) {
+      moveMotorA(255);
+      moveMotorB(200);
+      delay(2000);
+    }
+    else if (distance2 < 100) {
+      moveMotorA(255);
+      moveMotorB(255);
+      delay(2000);
+    }
+    else if (distance3 < 100) {
+      moveMotorA(200);
+      moveMotorB(255);
+      delay(2000);
+    }
+
+  }
 
 }
 
@@ -116,7 +142,7 @@ void moveMotorA(int speed) {
   if (speed > 0) {
     digitalWrite(IN1, HIGH);
     digitalWrite(IN2, LOW);
-  } 
+  }
   else {
     digitalWrite(IN1, LOW);
     digitalWrite(IN2, HIGH);
@@ -137,7 +163,7 @@ void moveMotorB(int speed) {
   if (speed > 0) {
     digitalWrite(IN3, HIGH);
     digitalWrite(IN4, LOW);
-  } 
+  }
   else {
     digitalWrite(IN3, LOW);
     digitalWrite(IN4, HIGH);
@@ -152,5 +178,3 @@ void stopMotorB() {
   digitalWrite(IN4, LOW);
   analogWrite(ENB, 0);
 }
-
-
