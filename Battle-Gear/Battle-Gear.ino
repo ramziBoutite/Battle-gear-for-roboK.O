@@ -1,4 +1,3 @@
-
 // Ultrasonic Sensor Pins
 #define TRIGGER_PIN1  52   // Trigger pin for sensor 1
 #define ECHO_PIN1     50   // Echo pin for sensor 1
@@ -67,8 +66,8 @@ void loop() {
   delayMicroseconds(10);  // Send a 10us pulse
   digitalWrite(TRIGGER_PIN1, LOW);
 
-  duration1 = pulseIn(ECHO_PIN1, HIGH);  // Measure the time for echo
-  distance1 = duration1 * 0.0344 / 2;  // Convert time to distance (cm)
+  duration1 = pulseIn(ECHO_PIN1, HIGH,6000);  // Measure the time for echo
+  distance1 = (duration1 == 0) ? 100 : constrain(duration1 * 0.0344 / 2, 0, 100); // Convert time to distance (cm)
 
   // Measure distance for sensor 2
   digitalWrite(TRIGGER_PIN2, LOW);
@@ -77,8 +76,8 @@ void loop() {
   delayMicroseconds(10);  // Send a 10us pulse
   digitalWrite(TRIGGER_PIN2, LOW);
 
-  duration2 = pulseIn(ECHO_PIN2, HIGH);  // Measure the time for echo
-  distance2 = duration2 * 0.0344 / 2;  // Convert time to distance (cm)
+  duration2 = pulseIn(ECHO_PIN2, HIGH,6000);  // Measure the time for echo
+  distance2 = (duration2 == 0) ? 100 : constrain(duration2 * 0.0344 / 2, 0, 100);  // Convert time to distance (cm)
 
   // Measure distance for sensor 3
   digitalWrite(TRIGGER_PIN3, LOW);
@@ -87,8 +86,8 @@ void loop() {
   delayMicroseconds(10);  // Send a 10us pulse
   digitalWrite(TRIGGER_PIN3, LOW);
 
-  duration3 = pulseIn(ECHO_PIN3, HIGH);  // Measure the time for echo
-  distance3 = duration3 * 0.0344 / 2;  // Convert time to distance (cm)
+  duration3 = pulseIn(ECHO_PIN3, HIGH,6000);  // Measure the time for echo
+  distance3 = (duration3 == 0) ? 100 : constrain(duration3 * 0.0344 / 2, 0, 100); // Convert time to distance (cm)
 
   // Print the results
   Serial.print("Distance 1: ");
@@ -132,7 +131,7 @@ void loop() {
     delay(2000); // Pause for 2 seconds
   */
   //decision taking
-  if (ir1Detected)
+  /*if (ir1Detected)
   {
     //back
     moveMotorA(-255); // Full speed backward
@@ -169,7 +168,7 @@ void loop() {
       delay(2000);
     }
 
-  }
+  }*/
 
 }
 
