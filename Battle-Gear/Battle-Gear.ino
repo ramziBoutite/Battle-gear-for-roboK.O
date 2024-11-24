@@ -1,18 +1,21 @@
-#include <NewPing.h>
-
-
 
 // Ultrasonic Sensor Pins
-#define TRIG1 12
-#define ECHO1 13
-#define TRIG2 14
-#define ECHO2 15
-#define TRIG3 16
-#define ECHO3 17
+#define TRIGGER_PIN1  52   // Trigger pin for sensor 1
+#define ECHO_PIN1     50   // Echo pin for sensor 1
+
+#define TRIGGER_PIN2  51   // Trigger pin for sensor 2
+#define ECHO_PIN2     53   // Echo pin for sensor 2
+
+#define TRIGGER_PIN3  12   // Trigger pin for sensor 3
+#define ECHO_PIN3     13   // Echo pin for sensor 3
+//
+long duration1, duration2, duration3;
+float distance1, distance2, distance3;
 
 // IR Sensor Pins
-#define IR1 18
-#define IR2 19
+#define IR1 24
+#define IR2 25
+
 
 // Motor Control Pins (H-Bridge)
 #define ENA 5 // Speed control for Motor A (PWM)
@@ -22,10 +25,7 @@
 #define IN3 10 // Direction control for Motor B
 #define IN4 9 // Direction control for Motor B
 
-// Ultrasonic Sensors Setup
-NewPing sonar1(TRIG1, ECHO1, 200); // Sensor 1, max distance 200 cm
-NewPing sonar2(TRIG2, ECHO2, 200); // Sensor 2
-NewPing sonar3(TRIG3, ECHO3, 200); // Sensor 3
+
 
 void setup() {
   // Motor control pins
@@ -35,6 +35,16 @@ void setup() {
   pinMode(ENB, OUTPUT);
   pinMode(IN3, OUTPUT);
   pinMode(IN4, OUTPUT);
+
+  // Set the trigger pins as OUTPUT
+  pinMode(TRIGGER_PIN1, OUTPUT);
+  pinMode(TRIGGER_PIN2, OUTPUT);
+  pinMode(TRIGGER_PIN3, OUTPUT);
+
+  // Set the echo pins as INPUT
+  pinMode(ECHO_PIN1, INPUT);
+  pinMode(ECHO_PIN2, INPUT);
+  pinMode(ECHO_PIN3, INPUT);
 
   // IR sensor pins
   pinMode(IR1, INPUT);
@@ -46,23 +56,53 @@ void setup() {
 void loop() {
 
   //read and debug sensors funcion and processing data
-  // Read ultrasonic sensors
-  unsigned int distance1 = sonar1.ping_cm();
-  unsigned int distance2 = sonar2.ping_cm();
-  unsigned int distance3 = sonar3.ping_cm();
-
-  // Read IR sensors
+  //read from IR
   bool ir1Detected = digitalRead(IR1);
   bool ir2Detected = digitalRead(IR2);
+  // Read ultrasonic sensors
+  // Measure distance for sensor 1
+  digitalWrite(TRIGGER_PIN1, LOW);
+  delayMicroseconds(2);  // Wait for a stable LOW signal
+  digitalWrite(TRIGGER_PIN1, HIGH);
+  delayMicroseconds(10);  // Send a 10us pulse
+  digitalWrite(TRIGGER_PIN1, LOW);
 
-  // Debugging information
-  Serial.print("Ultrasonic: ");
+  duration1 = pulseIn(ECHO_PIN1, HIGH);  // Measure the time for echo
+  distance1 = duration1 * 0.0344 / 2;  // Convert time to distance (cm)
+
+  // Measure distance for sensor 2
+  digitalWrite(TRIGGER_PIN2, LOW);
+  delayMicroseconds(2);  // Wait for a stable LOW signal
+  digitalWrite(TRIGGER_PIN2, HIGH);
+  delayMicroseconds(10);  // Send a 10us pulse
+  digitalWrite(TRIGGER_PIN2, LOW);
+
+  duration2 = pulseIn(ECHO_PIN2, HIGH);  // Measure the time for echo
+  distance2 = duration2 * 0.0344 / 2;  // Convert time to distance (cm)
+
+  // Measure distance for sensor 3
+  digitalWrite(TRIGGER_PIN3, LOW);
+  delayMicroseconds(2);  // Wait for a stable LOW signal
+  digitalWrite(TRIGGER_PIN3, HIGH);
+  delayMicroseconds(10);  // Send a 10us pulse
+  digitalWrite(TRIGGER_PIN3, LOW);
+
+  duration3 = pulseIn(ECHO_PIN3, HIGH);  // Measure the time for echo
+  distance3 = duration3 * 0.0344 / 2;  // Convert time to distance (cm)
+
+  // Print the results
+  Serial.print("Distance 1: ");
   Serial.print(distance1);
-  Serial.print("cm, ");
+  Serial.print(" cm, ");
+  Serial.print("Distance 2: ");
   Serial.print(distance2);
-  Serial.print("cm, ");
+  Serial.print(" cm, ");
+  Serial.print("Distance 3: ");
   Serial.print(distance3);
-  Serial.println("cm");
+  Serial.println(" cm");
+
+  // Wait a bit before taking the next readings
+  delay(50);
 
   Serial.print("IR Sensors: IR1=");
   Serial.print(ir1Detected);
