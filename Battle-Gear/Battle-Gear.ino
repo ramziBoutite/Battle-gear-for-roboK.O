@@ -24,7 +24,8 @@ float distance1, distance2, distance3;
 #define IN3 10 // Direction control for Motor B
 #define IN4 9 // Direction control for Motor B
 
-
+bool ir1Detected = 0;
+bool ir2Detected =0;
 
 void setup() {
   // Motor control pins
@@ -56,8 +57,8 @@ void loop() {
 
   //read and debug sensors funcion and processing data
   //read from IR
-  bool ir1Detected = digitalRead(IR1);
-  bool ir2Detected = digitalRead(IR2);
+   ir1Detected = digitalRead(IR1);
+   ir2Detected = digitalRead(IR2);
   // Read ultrasonic sensors
   // Measure distance for sensor 1
   digitalWrite(TRIGGER_PIN1, LOW);
@@ -66,7 +67,7 @@ void loop() {
   delayMicroseconds(10);  // Send a 10us pulse
   digitalWrite(TRIGGER_PIN1, LOW);
 
-  duration1 = pulseIn(ECHO_PIN1, HIGH,6000);  // Measure the time for echo
+  duration1 = pulseIn(ECHO_PIN1, HIGH, 6000); // Measure the time for echo
   distance1 = (duration1 == 0) ? 100 : constrain(duration1 * 0.0344 / 2, 0, 100); // Convert time to distance (cm)
 
   // Measure distance for sensor 2
@@ -76,7 +77,7 @@ void loop() {
   delayMicroseconds(10);  // Send a 10us pulse
   digitalWrite(TRIGGER_PIN2, LOW);
 
-  duration2 = pulseIn(ECHO_PIN2, HIGH,6000);  // Measure the time for echo
+  duration2 = pulseIn(ECHO_PIN2, HIGH, 6000); // Measure the time for echo
   distance2 = (duration2 == 0) ? 100 : constrain(duration2 * 0.0344 / 2, 0, 100);  // Convert time to distance (cm)
 
   // Measure distance for sensor 3
@@ -86,7 +87,7 @@ void loop() {
   delayMicroseconds(10);  // Send a 10us pulse
   digitalWrite(TRIGGER_PIN3, LOW);
 
-  duration3 = pulseIn(ECHO_PIN3, HIGH,6000);  // Measure the time for echo
+  duration3 = pulseIn(ECHO_PIN3, HIGH, 6000); // Measure the time for echo
   distance3 = (duration3 == 0) ? 100 : constrain(duration3 * 0.0344 / 2, 0, 100); // Convert time to distance (cm)
 
   // Print the results
@@ -131,89 +132,104 @@ void loop() {
     delay(2000); // Pause for 2 seconds
   */
   //decision taking
-  if (ir1Detected)
+  ir1Detected = digitalRead(IR1);
+  ir2Detected = digitalRead(IR2);
+  
+  if (ir1Detected )
   {
+    while (ir1Detected){
     //back
     moveMotorA(-255); // Full speed backward
     moveMotorB(-255); // Full speed backward
-    delay(200);
+    Serial.println("going back");
+    ir1Detected = digitalRead(IR1);
+    delay(250);
+    }
+    
   }
   else if (ir2Detected) {
+    while(ir2Detected){
     //drible back and push
-    moveMotorA(-255);
-    delay(200);
+    moveMotorA(255);
+    Serial.println("going dribling");
+    ir2Detected = digitalRead(IR2);
+    delay(1000);
+    }
+    
   }
 
-  //ultra sonic based decision making
-  else if ((distance1 > 100) && (distance2 > 100) && (distance3 > 100)) {
+  /*
+    //ultra sonic based decision making
+    else if ((distance1 > 70) && (distance2 > 70) && (distance3 > 70)) {
     //search
     moveMotorA(255);
     moveMotorB(155);
-  }
+    }
 
-  else {
-    if (distance1 < 100) {
+    else {
+    if (distance2 < 70) {
+      moveMotorA(255);
+      moveMotorB(255);
+      delay(200);
+    }
+    else if (distance1 < 70) {
       moveMotorA(255);
       moveMotorB(200);
       delay(200);
     }
-    else if (distance2 < 100) {
-      moveMotorA(255);
-      moveMotorB(255);
-      delay(200);
-    }
-    else if (distance3 < 100) {
-     // moveMotorA(200);
+    else if (distance3 < 70) {
+      moveMotorA(200);
       moveMotorB(255);
       delay(200);
     }
 
-  }
+    }
+*/
 
-}
+    }
 
 
 
 
-// Motor Control Functions
-// Function to move Motor A
-void moveMotorA(int speed) {
-  if (speed > 0) {
+    // Motor Control Functions
+    // Function to move Motor A
+    void moveMotorA(int speed) {
+    if (speed > 0) {
     digitalWrite(IN1, HIGH);
     digitalWrite(IN2, LOW);
-  }
-  else {
+    }
+    else {
     digitalWrite(IN1, LOW);
     digitalWrite(IN2, HIGH);
     speed = -speed; // Make speed positive for PWM
-  }
-  analogWrite(ENA, speed);
-}
+    }
+    analogWrite(ENA, speed);
+    }
 
-// Function to stop Motor A
-void stopMotorA() {
-  digitalWrite(IN1, LOW);
-  digitalWrite(IN2, LOW);
-  analogWrite(ENA, 0);
-}
+    // Function to stop Motor A
+    void stopMotorA() {
+    digitalWrite(IN1, LOW);
+    digitalWrite(IN2, LOW);
+    analogWrite(ENA, 0);
+    }
 
-// Function to move Motor B
-void moveMotorB(int speed) {
-  if (speed > 0) {
+    // Function to move Motor B
+    void moveMotorB(int speed) {
+    if (speed > 0) {
     digitalWrite(IN3, HIGH);
     digitalWrite(IN4, LOW);
-  }
-  else {
+    }
+    else {
     digitalWrite(IN3, LOW);
     digitalWrite(IN4, HIGH);
     speed = -speed; // Make speed positive for PWM
-  }
-  analogWrite(ENB, speed);
-}
+    }
+    analogWrite(ENB, speed);
+    }
 
-// Function to stop Motor B
-void stopMotorB() {
-  digitalWrite(IN3, LOW);
-  digitalWrite(IN4, LOW);
-  analogWrite(ENB, 0);
-}
+    // Function to stop Motor B
+    void stopMotorB() {
+    digitalWrite(IN3, LOW);
+    digitalWrite(IN4, LOW);
+    analogWrite(ENB, 0);
+    }
