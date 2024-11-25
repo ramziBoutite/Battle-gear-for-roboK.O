@@ -5,15 +5,15 @@
 #define TRIGGER_PIN2  51   // Trigger pin for sensor 2
 #define ECHO_PIN2     53   // Echo pin for sensor 2
 
-#define TRIGGER_PIN3  12   // Trigger pin for sensor 3
-#define ECHO_PIN3     13   // Echo pin for sensor 3
+#define TRIGGER_PIN3  2   // Trigger pin for sensor 3
+#define ECHO_PIN3     3   // Echo pin for sensor 3
 //
 long duration1, duration2, duration3;
 float distance1, distance2, distance3;
 
 // IR Sensor Pins
-#define IR1 24
-#define IR2 25
+#define IR1 22
+#define IR2 23
 
 
 // Motor Control Pins (H-Bridge)
@@ -101,7 +101,7 @@ void loop() {
   Serial.println(" cm");
 
   // Wait a bit before taking the next readings
-  delay(50);
+  //delay(50);
 
   Serial.print("IR Sensors: IR1=");
   Serial.print(ir1Detected);
@@ -131,17 +131,17 @@ void loop() {
     delay(2000); // Pause for 2 seconds
   */
   //decision taking
-  /*if (ir1Detected)
+  if (ir1Detected)
   {
     //back
     moveMotorA(-255); // Full speed backward
     moveMotorB(-255); // Full speed backward
-    delay(2000);
+    delay(200);
   }
   else if (ir2Detected) {
     //drible back and push
     moveMotorA(-255);
-    delay(2000);
+    delay(200);
   }
 
   //ultra sonic based decision making
@@ -155,20 +155,20 @@ void loop() {
     if (distance1 < 100) {
       moveMotorA(255);
       moveMotorB(200);
-      delay(2000);
+      delay(200);
     }
     else if (distance2 < 100) {
       moveMotorA(255);
       moveMotorB(255);
-      delay(2000);
+      delay(200);
     }
     else if (distance3 < 100) {
-      moveMotorA(200);
+     // moveMotorA(200);
       moveMotorB(255);
-      delay(2000);
+      delay(200);
     }
 
-  }*/
+  }
 
 }
 
