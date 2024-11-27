@@ -32,6 +32,9 @@ bool ir3Detected = 0;
 
 int detection_distance = 30;
 void setup() {
+
+  //we have to add a delay of 5s
+  
   // Motor control pins
   pinMode(ENA, OUTPUT);
   pinMode(IN1, OUTPUT);
@@ -62,6 +65,7 @@ void loop() {
 
   //read and debug sensors funcion and processing data
   //read from IR
+  //we have to revers the readings to not mess the logic
   ir1Detected = digitalRead(IR1);
   ir2Detected = digitalRead(IR2);
   ir3Detected = digitalRead(IR3);
